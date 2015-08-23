@@ -75,14 +75,15 @@ def main():
         thread = Loading()
         thread.start()
 
-        sys.argv = [None, '.env', '--quiet']
+        # FIXME Should not use --system-site-packages
+        sys.argv = [None, '.env', '--quiet', '--system-site-packages']
         virtualenv.main()
 
         # FIXME Does not work if the virtualenv creation fail because the exit code is always 0
         thread.stop(0, 'Unable to create virtualenv')
 
     process = subprocess.Popen(['.env/bin/python', 'install_dependencies.py'])
-    error_code = process.wait()
+    code = process.wait()
 
-    if error_code != 0:
-        sys.exit(error_code)
+    if code != 0:
+        sys.exit(code)
