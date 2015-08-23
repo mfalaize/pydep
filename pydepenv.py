@@ -63,7 +63,7 @@ def main():
     if code != 0:
         sys.exit(code)
 
-    if not os.path.isfile('env/bin/python'):
+    if not os.path.isfile('.env/bin/python'):
         try:
             import virtualenv
         except ImportError:
@@ -75,13 +75,13 @@ def main():
         thread = Loading()
         thread.start()
 
-        sys.argv = [None, 'env', '--quiet']
+        sys.argv = [None, '.env', '--quiet']
         virtualenv.main()
 
         # FIXME Does not work if the virtualenv creation fail because the exit code is always 0
         thread.stop(0, 'Unable to create virtualenv')
 
-    process = subprocess.Popen(['env/bin/python', 'install_dependencies.py'])
+    process = subprocess.Popen(['.env/bin/python', 'install_dependencies.py'])
     error_code = process.wait()
 
     if error_code != 0:
