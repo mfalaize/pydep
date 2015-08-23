@@ -51,18 +51,6 @@ def main():
         print('\033[91mFile install_dependencies.py cannot be found\033[0m')
         sys.exit(-1)
 
-    print('Upgrading pip if necessary...', end='', flush=True)
-
-    thread = Loading()
-    thread.start()
-
-    code = pip.main(['install', '--upgrade', 'pip', '--quiet'])
-
-    thread.stop(code, 'Unable to upgrade pip')
-
-    if code != 0:
-        sys.exit(code)
-
     if not os.path.isfile('.env/bin/python'):
         try:
             import virtualenv
@@ -84,6 +72,20 @@ def main():
 
     process = subprocess.Popen(['.env/bin/python', 'install_dependencies.py'])
     code = process.wait()
+
+    if code != 0:
+        sys.exit(code)
+
+
+def upgrade_pip():
+    print('Upgrading pip...', end='', flush=True)
+
+    thread = Loading()
+    thread.start()
+
+    code = pip.main(['install', '--upgrade', 'pip', '--quiet'])
+
+    thread.stop(code, 'Unable to upgrade pip')
 
     if code != 0:
         sys.exit(code)
